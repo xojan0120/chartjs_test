@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Scriptable > Radar | Chart.js sample</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="Chart.min.js"></script>
+  <!--
+    draggableにするために必要なchart.jsプラグイン 
+    https://www.npmjs.com/package/chartjs-plugin-dragdata
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@0.3.0/dist/chartjs-plugin-dragData.min.js"></script>
+</head>
+<body>
+  <div>item: <span id="item"></span></div>
+  <div>value: <span id="value"></span></div>
+  <canvas id="chart-0"></canvas>
+
+	<script>
+    var myCanvas = document.getElementById('chart-0');
+    var ctx = document.getElementById('chart-0').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['Ruby', 'Rails', 'Python', 'VBA', 'AWS', 'GCP', 'Git', 'A', 'B', 'C'],
+        datasets: [
+          {
+            label: 'skills',
+            data: [2, 9, 3, 7, 6, 3, 7, 1, 2, 3],
+            backgroundColor: "rgba(153,255,51,0.4)",
+            pointRadius: 10,
+            pointHoverRadius: 10,
+          },
+        ]
+      },
+      options: {
+
+        scale: {
+          pointLabels: {
+            fontSize: 30 
+          },
+          ticks: {
+            // レーダーチャートのメモリの最大値。これを指定して固定しておかないと、
+            // グラフをドラッグしたときの各点の最大値が10未満になったときに、
+            // 最大値が変化してしまうため、自動的にレーダーチャートが縮小されてしまう。
+            max: 10, 
+            min: 0,
+            stepSize: 1
+          }
+        },
+
+
+        //tooltips: {
+        //  callbacks: {
+        //    title: function(tooltipItems, data) {
+        //      console.log(tooltipItems);
+        //      console.log(data);
+        //      return new Date().toLocaleTimeString();
+        //    }
+        //  }
+        //},
+
+        dragData: true, // dragを有効にする
+        dragDataRound: 0, // dragしたときに四捨五入する。0で整数に、1で少数第一位で四捨五入、-1で10倍に。
+        onDragEnd: function(event, datasetIndex, index, value) {
+          console.log(`datasetIndex:${datasetIndex}, index:${index}, value:${value}`);
+          document.getElementById('item').innerHTML = myChart.config.data.labels[index];
+          document.getElementById('value').innerHTML = value;
+        },
+
+      }
+    });
+
+	</script>
+</body>
+</html>
